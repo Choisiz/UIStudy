@@ -46,28 +46,40 @@
         i
       ].objs.container.style.height = `${sceneInfo[i].scrollHeight}px`;
     }
+
+    //scene 바꾸기(0,1,2,3)
+    yOffset = window.pageYOffset;
+    let totalScrollHeight = 0;
+    for (let i = 0; i < sceneInfo.length; i++) {
+      totalScrollHeight += sceneInfo[i].scrollHeight;
+      if (totalScrollHeight >= yOffset) {
+        currentScene = i;
+        break;
+      }
+    }
+    document.body.setAttribute("id", `show-scene-${currentScene}`);
   }
 
   function scrollLoop() {
-    prevScrollHeight = 0;
+    prevScrollHeight = 0; //전체스크린
     for (let i = 0; i < currentScene; i++) {
       prevScrollHeight += sceneInfo[i].scrollHeight;
     }
     if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
       currentScene++;
+      document.body.setAttribute("id", `show-scene-${currentScene}`);
     }
     if (yOffset < prevScrollHeight) {
       if (currentScene === 0) return;
       currentScene--;
+      document.body.setAttribute("id", `show-scene-${currentScene}`);
     }
-
-    console.log(currentScene);
   }
 
-  window.addEventListener("resize", settLayout);
   window.addEventListener("scroll", () => {
     yOffset = window.pageYOffset;
     scrollLoop();
   });
-  settLayout();
+  window.addEventListener("resize", settLayout);
+  window.addEventListener("load", settLayout);
 })();
