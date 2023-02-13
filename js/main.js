@@ -4,6 +4,7 @@
   let currentScene = 0; //현재 홠성화된(눈앞에 보고있는) 씬
   let enterNewScene = false; //새로운 씬 시작된 순간 true / 바뀔때 음수값 에러수정
 
+  //씬 =콘텐츠 정보
   const sceneInfo = [
     {
       //0
@@ -18,7 +19,8 @@
         messageD: document.querySelector("#scroll-section-0 .main-message.d"),
       },
       values: {
-        messageA_opacity: [0, 1],
+        messageA_opacity: [0, 1, { start: 0.1, end: 0.2 }],
+        messageB_opacity: [0, 1, { start: 0.2, end: 0.4 }],
       },
     },
     {
@@ -75,8 +77,28 @@
   function calcValues(values, currentYOffset) {
     let rv;
     //현재 씬에서 스크롤된 범위의 비율 구하기
-    let scrollRatio = currentYOffset / sceneInfo[currentScene].scrollHeight;
-    rv = scrollRatio * (values[1] - values[0]) + values[0];
+    const scrollHight = sceneInfo[currentScene].scrollHeight;
+    const scrollRatio = currentYOffset / sceneInfo[currentScene].scrollHeight;
+    if (values.length === 3) {
+      const partScrollStart = values[2].start * scrollHight;
+      const partScrollEnd = values[2].end * scrollHight;
+      const partScrollHeight = partScrollEnd - partScrollStart;
+      if (
+        currentYOffset >= partScrollStart &&
+        currentYOffset <= partScrollEnd
+      ) {
+        rv =
+          ((currentYOffset - partScrollStart) / partScrollHeight) *
+            (values[1] - values[0]) +
+          values[0];
+      } else if (currentYOffset < partScrollStart) {
+        rv = values[0];
+      } else if (currentYOffset > partScrollEnd) {
+        rv = values[1];
+      }
+    } else {
+      rv = scrollRatio * (values[1] - values[0]) + values[0];
+    }
     return rv;
   }
 
@@ -103,8 +125,9 @@
     }
   }
 
+  //스크롤시 동작하는 함수
   function scrollLoop() {
-    enterNewScene = false;
+    enterNewScene = false; //새로운씬시작되는순간
     prevScrollHeight = 0; //전체스크린
     for (let i = 0; i < currentScene; i++) {
       prevScrollHeight += sceneInfo[i].scrollHeight;
