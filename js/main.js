@@ -19,8 +19,11 @@
         messageD: document.querySelector("#scroll-section-0 .main-message.d"),
       },
       values: {
-        messageA_opacity: [0, 1, { start: 0.1, end: 0.2 }],
-        messageB_opacity: [0, 1, { start: 0.2, end: 0.4 }],
+        messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
+        messageA_translateY_in: [20, 0, { start: 0.1, end: 0.2 }],
+        //messageB_opacity_in: [0, 1, { start: 0.2, end: 0.4 }],
+        messageA_opacity_out: [1, 0, { start: 0.25, end: 0.3 }],
+        messageA_translateY_out: [0, -20, { start: 0.25, end: 0.3 }],
       },
     },
     {
@@ -61,7 +64,7 @@
       ].objs.container.style.height = `${sceneInfo[i].scrollHeight}px`;
     }
 
-    //scene 바꾸기(0,1,2,3)
+    //scene 바꾸기(0,1,2,3)=
     yOffset = window.pageYOffset;
     let totalScrollHeight = 0;
     for (let i = 0; i < sceneInfo.length; i++) {
@@ -106,15 +109,36 @@
     const objs = sceneInfo[currentScene].objs;
     const values = sceneInfo[currentScene].values;
     const currentYOffset = yOffset - prevScrollHeight;
+    const scrollHeight = sceneInfo[currentScene].scrollHeight;
+    const scrollRatio = currentYOffset / scrollHeight;
 
-    console.log(currentScene, currentYOffset);
     switch (currentScene) {
       case 0:
-        let messageA_opacity_in = calcValues(
-          values.messageA_opacity,
+        const messageA_opacity_in = calcValues(
+          values.messageA_opacity_in,
           currentYOffset
         );
-        objs.messageA.style.opacity = messageA_opacity_in;
+        const messageA_opacity_out = calcValues(
+          values.messageA_opacity_out,
+          currentYOffset
+        );
+        const messageA_translateY_in = calcValues(
+          values.messageA_translateY_in,
+          currentYOffset
+        );
+        const messageA_translateY_out = calcValues(
+          values.messageA_translateY_out,
+          currentYOffset
+        );
+        if (scrollRatio <= 0.22) {
+          //in
+          objs.messageA.style.opacity = messageA_opacity_in;
+          objs.messageA.style.transform = `translateY(${messageA_translateY_in}%)`;
+        } else {
+          //out
+          objs.messageA.style.opacity = messageA_opacity_out;
+          objs.messageA.style.transform = `translateY(${messageA_translateY_out}%)`;
+        }
         break;
       case 1:
         break;
@@ -130,6 +154,7 @@
     enterNewScene = false; //새로운씬시작되는순간
     prevScrollHeight = 0; //전체스크린
     for (let i = 0; i < currentScene; i++) {
+      //현재위치한창크기를 제외한 섹션(스크린)까지의 전체창크기
       prevScrollHeight += sceneInfo[i].scrollHeight;
     }
     if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
@@ -151,6 +176,6 @@
     yOffset = window.pageYOffset;
     scrollLoop();
   });
-  window.addEventListener("resize", settLayout);
-  window.addEventListener("load", settLayout);
+  window.addEventListener("resize", settLayout); //창크기조절
+  window.addEventListener("load", settLayout); //문서로드시
 })();
