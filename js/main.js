@@ -89,10 +89,7 @@
         container: document.querySelector("#scroll-section-3"),
         canvasCaption: document.querySelector(".canvas-caption"),
       },
-      values: {
-        messageA_opacity_in: [0, 1, { start: 0, end: 0 }],
-        messageA_opacity_out: [1, 0, { start: 0, end: 0 }],
-      },
+      values: {},
     },
   ];
 
@@ -159,27 +156,29 @@
 
     switch (currentScene) {
       case 0:
+        // console.log('0 play');
         if (scrollRatio <= 0.22) {
-          //in
+          // in
           objs.messageA.style.opacity = calcValues(
             values.messageA_opacity_in,
             currentYOffset
           );
-          objs.messageA.style.transform = `translateY(${calcValues(
+          objs.messageA.style.transform = `translate3d(0, ${calcValues(
             values.messageA_translateY_in,
             currentYOffset
-          )}%)`;
+          )}%, 0)`;
         } else {
-          //out
+          // out
           objs.messageA.style.opacity = calcValues(
-            values.messageA_translateY_out,
+            values.messageA_opacity_out,
             currentYOffset
           );
-          objs.messageA.style.transform = `translateY(${calcValues(
+          objs.messageA.style.transform = `translate3d(0, ${calcValues(
             values.messageA_translateY_out,
             currentYOffset
-          )}%)`;
+          )}%, 0)`;
         }
+
         if (scrollRatio <= 0.42) {
           // in
           objs.messageB.style.opacity = calcValues(
@@ -201,6 +200,7 @@
             currentYOffset
           )}%, 0)`;
         }
+
         if (scrollRatio <= 0.62) {
           // in
           objs.messageC.style.opacity = calcValues(
@@ -222,6 +222,7 @@
             currentYOffset
           )}%, 0)`;
         }
+
         if (scrollRatio <= 0.82) {
           // in
           objs.messageD.style.opacity = calcValues(
@@ -243,12 +244,97 @@
             currentYOffset
           )}%, 0)`;
         }
+
         break;
-      case 1:
-        break;
+
       case 2:
+        // console.log('2 play');
+        if (scrollRatio <= 0.25) {
+          // in
+          objs.messageA.style.opacity = calcValues(
+            values.messageA_opacity_in,
+            currentYOffset
+          );
+          objs.messageA.style.transform = `translate3d(0, ${calcValues(
+            values.messageA_translateY_in,
+            currentYOffset
+          )}%, 0)`;
+        } else {
+          // out
+          objs.messageA.style.opacity = calcValues(
+            values.messageA_opacity_out,
+            currentYOffset
+          );
+          objs.messageA.style.transform = `translate3d(0, ${calcValues(
+            values.messageA_translateY_out,
+            currentYOffset
+          )}%, 0)`;
+        }
+
+        if (scrollRatio <= 0.57) {
+          // in
+          objs.messageB.style.transform = `translate3d(0, ${calcValues(
+            values.messageB_translateY_in,
+            currentYOffset
+          )}%, 0)`;
+          objs.messageB.style.opacity = calcValues(
+            values.messageB_opacity_in,
+            currentYOffset
+          );
+          objs.pinB.style.transform = `scaleY(${calcValues(
+            values.pinB_scaleY,
+            currentYOffset
+          )})`;
+        } else {
+          // out
+          objs.messageB.style.transform = `translate3d(0, ${calcValues(
+            values.messageB_translateY_out,
+            currentYOffset
+          )}%, 0)`;
+          objs.messageB.style.opacity = calcValues(
+            values.messageB_opacity_out,
+            currentYOffset
+          );
+          objs.pinB.style.transform = `scaleY(${calcValues(
+            values.pinB_scaleY,
+            currentYOffset
+          )})`;
+        }
+
+        if (scrollRatio <= 0.83) {
+          // in
+          objs.messageC.style.transform = `translate3d(0, ${calcValues(
+            values.messageC_translateY_in,
+            currentYOffset
+          )}%, 0)`;
+          objs.messageC.style.opacity = calcValues(
+            values.messageC_opacity_in,
+            currentYOffset
+          );
+          objs.pinC.style.transform = `scaleY(${calcValues(
+            values.pinC_scaleY,
+            currentYOffset
+          )})`;
+        } else {
+          // out
+          objs.messageC.style.transform = `translate3d(0, ${calcValues(
+            values.messageC_translateY_out,
+            currentYOffset
+          )}%, 0)`;
+          objs.messageC.style.opacity = calcValues(
+            values.messageC_opacity_out,
+            currentYOffset
+          );
+          objs.pinC.style.transform = `scaleY(${calcValues(
+            values.pinC_scaleY,
+            currentYOffset
+          )})`;
+        }
+
         break;
+
       case 3:
+        // console.log('3 play');
         break;
     }
   }
